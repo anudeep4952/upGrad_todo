@@ -1,0 +1,18 @@
+{% extends 'part1/base.html' %}
+{% block content %}
+
+    <div style="width:100%;height:100%;font-family: Comic Sans MS, cursive, sans-serif;color: lightskyblue;padding-top: 10%;"
+         xmlns="http://www.w3.org/1999/html">
+              <p style="font-size:4rem;color:lightpink;padding-left: 35% "  ><strong>SEND &nbsp; TO</strong></p><br>
+              <form method="post" enctype="multipart/form-data" style="font-size: 2rem;padding-left: 35%">
+    {% csrf_token %}
+
+<p><label for="userid1">Username:</label> <input type="text" name="userid1" maxlength="255" id="userid1"></p>
+    <button type="submit" class="btn-round btn btn-success  d-inline-flex" style="font-size: 1.75rem">Send</button>
+                  {{ msg }}
+  </form>
+
+          </div>
+
+
+{% endblock  %}

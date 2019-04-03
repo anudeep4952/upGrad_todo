@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}upGrad :: user{% endblock %}</title>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <link rel="stylesheet" href="{% static 'todo/style.css' %}">
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+ <div class="login">
+
+
+
+       {% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+
+
+
+     <form method="post" class="box" >
+               {% csrf_token %}
+
+
+
+        <h1 style="font-family:Comic Sans MS, cursive, sans-serif" >New User Registration</h1>
+                <input type="text" name="username" maxlength="150" autofocus required id="id_username" placeholder="username"><br>
+				<input type="text" name="first_name" maxlength="30" required id="id_first_name" placeholder="first name"><br>
+         <input type="text" name="last_name" maxlength="30" required id="id_last_name" placeholder="last name" ><br>
+<input type="text" name="email" maxlength="254" required id="id_email" placeholder="email" ><br>
+<input type="password" name="password1" required id="id_password1" placeholder="password"><br>
+<input type="password" name="password2" required id="id_password2" placeholder="confirm password"><br>
+
+         {% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger" style="color:darkcyan;font-size: 2rem">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong style="color:darkcyan;font-size: 2rem"> {{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+
+
+         <input type="submit" name="submit" placeholder="submit" value="submit">
+
+         <p style="color:cadetblue">&copy;  any quiries contact upGrad@gmail.com</p>
+
+         </form>
+     </div>
+
+
+
+</body>
+</html>

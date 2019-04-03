@@ -1,0 +1,37 @@
+{% extends 'part1/base.html' %}
+{% block content %}
+
+    <div style="width:100%;height:100%;font-family: Comic Sans MS, cursive, sans-serif;color: lightskyblue;padding-top: 10%;"
+         xmlns="http://www.w3.org/1999/html">
+              <p style="font-size:4rem;color:lightpink;padding-left: 35%    " ><strong>SEARCH &nbsp; PROFILE</strong></p><br>
+              <form method="post" enctype="multipart/form-data" style="font-size: 2rem;padding-left: 35%">
+    {% csrf_token %}
+
+<p><label for="userid1">Username:</label> <input type="text" name="userid1" maxlength="255" id="userid1"></p>
+    <button type="submit" class="btn-round btn btn-success  d-inline-flex" style="font-size: 1.75rem">Search</button>
+  </form>
+
+        <div style="padding-left: 35%;font-size: 2rem;color:slateblue;font-family: cursive;" >
+     {% if present == 1 %}
+  <strong><h1 style="padding-left: 10rem;color: #f1f1f1;font-size: 3rem">PROFILE</h1></strong>
+
+         <table style="text-align: left;border-style:inset;border-color:wheat;border:1 ">
+
+             <tr >
+                 <td>Username</td><td>:{{ c.username }}</td>
+         </tr>
+
+             <tr><td>First Name</td> <td>:{{ c.first_name }}</td></tr>
+             <tr><td>Last Name</td><td>:{{ c.last_name }}</td></tr>
+             <tr><td>Email id</td><td>:{{ c.email }}</td></tr>
+         </table>
+         </div>
+{% endif %}
+    {% if present == 0 %}
+    <strong><p  style="color: darkred;font-size: 1.25rem">{{ d }}</p></strong>
+
+    {% endif %}
+          </div>
+
+
+{% endblock  %}

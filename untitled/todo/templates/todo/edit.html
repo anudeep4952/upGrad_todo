@@ -1,0 +1,37 @@
+{% extends 'todo/base.html' %}
+{% block content %}
+  {{ l }}
+     <div  style="width:100%;height:100%;font-family: Comic Sans MS, cursive, sans-serif;color: lightskyblue;padding-top: 10%;">
+              <p style="font-size:4rem;color:lightpink;padding-left: 35%    " ><strong>EDIT TASK</strong></p>
+
+
+       {% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+
+              <form method="post" enctype="multipart/form-data" style="font-size: 2rem;padding-left: 35%">
+    {% csrf_token %}
+   <p><label for="id_task">Task:</label> <input type="text" name="task" maxlength="255" id="id_task" required value="{{ l.task }}"></p>
+                  <p>date:<input type="date" name="date" min="{{ d }}" value="{{ p }}"/></p>
+<p><label for="id_time">Time:</label> <input type="time" name="time" required id="id_time" value="{{ p1 }}" ></p>
+     <br><button type="submit" class="btn-round btn btn-success  d-inline-flex" style="font-size: 1.75rem">Save</button>
+  </form>
+
+
+  </form>
+
+
+     </div>
+
+{% endblock  %}

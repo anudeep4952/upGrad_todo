@@ -1,0 +1,40 @@
+{% extends 'todo/base.html' %}
+{%load staticfiles %}
+{% block content %}
+
+<div style="padding-top: 10%;padding-left: 20%">
+      <p style=";color: cadetblue;font-size: 4rem;font-family: Comic Sans MS, cursive, sans-serif;border-collapse: separate;padding-left: 23rem">TO-DO</p>
+
+    <table border="3px" style="text-align: center;border-collapse: collapse; width: 100%;border-color: black;" >
+           <tr style="width: 100%;border-style: groove;border: 2px;padding-left: 1rem;padding-right: 1rem">
+            <th style="font-size:2rem;color: #ffc107;padding-left: 1rem;padding-right: 1rem">task</th>
+            <th style="font-size:2rem;color: #ffc107;padding-left: 1rem;padding-right: 1rem;">date time</th>
+            <th style="font-size:2rem;color: #ffc107;padding-left: 1rem;padding-right: 1rem">due time</th>
+            <th style="font-size:2rem;color: #ffc107;padding-left: 1rem;padding-right: 1rem">status</th>
+            <th style="font-size:2rem;color: #ffc107;padding-left: 1rem;padding-right: 1rem">delete</th>
+            <th style="font-size:2rem;color: #ffc107;padding-left: 1.5rem;padding-right: 1.5rem">edit</th>
+            <th style="font-size:1rem;color: #ffc107;padding-left: 1rem;padding-right: 1rem">click if completed</th>
+            <th style="font-size:1rem;color: #ffc107;padding-left: 1rem;padding-right: 1rem">click if not completed</th>
+
+        </tr>
+
+
+             {% for i in l %}
+  <tr style="color: mistyrose;font-size: 1.5rem">
+            <td style="padding-left: 1rem;padding-right: 1rem">{{ i.task }}</td>
+        <td style="padding-left: 1rem;padding-right: 1rem">{{ i.date}}</td>
+        <td style="padding-left: 1rem;padding-right: 1rem">{{ i.time }}</td>
+        <td style="padding-left: 1rem;padding-right: 1rem">{{ i.status }}</td>
+      <td style="padding-left: 1rem;padding-right: 1rem"> <a href="http://127.0.0.1:8000/delete/{{  user.username }}/{{ i.todo_id }}/"><img src="https://img.icons8.com/flat_round/26/000000/delete-sign.png"></a></td>
+      <td style="padding-left: 1rem;padding-right: 1rem"> <a href="http://127.0.0.1:8000/edit/{{  user.username }}/{{ i.todo_id }}/"><img src="https://img.icons8.com/color/50/000000/multi-edit.png"></a></td>
+      <td style="padding-left: 1rem;padding-right: 1rem"> <a href="http://127.0.0.1:8000/status/complete/{{  user.username }}/{{ i.todo_id }}/"><img src="https://i.pinimg.com/736x/05/57/c7/0557c7a9d6ecea015b9389ecb6ff0156--emoticons-text-smileys.jpg" width="40rem" height="40rem"></a></td>
+      <td style="padding-left: 1rem;padding-right: 1rem"> <a href="http://127.0.0.1:8000/status/incomplete/{{  user.username }}/{{ i.todo_id }}/"><img src="http://4.bp.blogspot.com/-Xs8_i1sArfg/UwyCbF07mSI/AAAAAAAAFXE/9xKmIFaabYg/s1600/sad-smiley.png" width="40rem" height="40rem"></a></td>
+
+        </tr>
+         {% endfor %}
+    </table>
+</div>
+
+
+
+{% endblock %}

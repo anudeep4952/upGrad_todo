@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+{%load static %}
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+ <link rel="stylesheet" href="{% static 'todo/style1.css' %}">
+<link href='http://fonts.googleapis.com/css?family=Arizonia' rel='stylesheet' type='text/css'>
+
+
+
+<table  style="width: 100%;border-collapse: collapse;position: absolute;z-index: 4" >
+<tr style="background-color:lightgoldenrodyellow;">
+    <td style="text-align: right;width: 20%;"></td>
+<td style="color: blanchedalmond;text-align: right;width:60;" class="lo">
+    <strong><p style="color: darkgreen ;text-align: center;font-size: 4rem">Up &nbsp; Grad</p></strong>
+</td>
+<td style="text-align: right;width: 20%;font-size: 1.5rem" >
+    {% if user.is_authenticated %}
+
+        <a href="http://127.0.0.1:8000/logout/" style="font-family: cursive">Hi {{ user.username }}! logout</a>
+
+{% else %}
+  <p >You are not logged in</p>
+    {% endif %}
+</td>
+</tr>
+</table>
+
+<style>
+    .col {
+  float: left;
+  width: 50%;
+}
+
+
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+    .btn-round{border-radius: 24px;}
+    .lo {
+  font: 400 100px/1.3 'Arizonia', Helvetica, sans-serif;
+  color: #2b2b2b;
+  text-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+}
+</style>
+
+</head>
+<body bgcolor="silver" >
+<div class="row">
+      <div class="col" >
+          <div class="lo" style="width: 100%;height: 80%;color: bisque;padding-top: 30%;padding-left: 30%">
+              <p style="font-size:3rem;color: lightpink;padding-left: 30%">ABOUT  US</p>
+
+              <p style="font-size: 2rem">upGrad is an online higher education platform providing rigorous industry-relevant programs designed and delivered in collaboration with world-class faculty and industry. Merging the latest technology, pedagogy, and services, upGrad is creating an immersive learning experience – anytime and anywhere.</p>
+
+          </div>
+
+      </div>
+  <div class="col" >
+
+    <div style="padding-top: 30%;padding-left: 20%">
+      <table class="box" >
+    <tr>
+          <tr><th style="color: darkred;font-size: 3rem" class="lo"><strong>LOGIN</strong></th></tr>
+     <form method="post">
+{% csrf_token %}
+<tr><td><input type="text" name="username" autofocus required id="id_username" placeholder="username"></td></tr>
+<tr><td><input type="password" name="password" required id="id_password" placeholder="password"></td>{{ si }}</tr>
+
+
+
+    <tr>  <td><p><button type="submit"  class="btn btn-success  d-inline-flex btn-round" style="font-family: Comic Sans MS, cursive, sans-serif" >Login</button></p></td></tr>
+</form>
+        </tr>
+        <tr>
+        <td><center>
+<a href="http://127.0.0.1:8000/register/" class=" d-inline-flex "  style="font-size:2rem;color:yellow"><b><i>New user registration</i></b></a>
+        </center></td>
+</tr>
+</table>
+  </div>
+  </div>
+</div>
+</body>
+</html>
