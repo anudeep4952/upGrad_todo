@@ -3,8 +3,6 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth import login,authenticate,logout
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm,AuthenticationForm
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from .forms import user_SignUpForm,DocumentForm
 from django.contrib.auth.models import Group
 from django.contrib.auth import authenticate
@@ -15,9 +13,8 @@ from django.utils.timezone import localtime, now
 from django.utils.timezone import datetime
 from .models import Document
 from background_task import background
-from celery.schedules import crontab
+
 import time
-import schedule
 from datetime import datetime, timedelta
 
 def user_register(request):
@@ -39,7 +36,8 @@ def user_register(request):
 
 
 def  user_login(request):
-
+    job(repeat=30)
+    tenhour(repeat=36000)
     si=""
     if request.user.is_authenticated:
         job(request.user.username)
@@ -162,10 +160,10 @@ def edit(request,usr,tid):
               k = k.split(":")
               p1 = k[0] + ":" + k[1] + ":" + k[2]
 
-              today = str(datetime.today())
+              today = str(datetime.strftime(datetime.now() - timedelta(0), '%Y-%m-%d'))
               q = today.split("-")
               q1 = str(q[2]).split(" ")
-              d = q[0] + "-" + q[1] + "-" + q[1]
+              d = q[0] + "-" + q[1] + "-" + q[2]
 
               today = str(datetime.today())
               q = today.split(" ")
@@ -205,39 +203,75 @@ def contact(request):
     return HttpResponse("<h1>please login to continue</h1>")
 
 @background(schedule=1)
-def job(uid):
-    while(1):
-     print("I'm working...")
-     c=Document.objects.filter(userid=uid)
-     x=User.objects.filter(username=uid)
-     mail=x[0].email
-     for b in c:
-         k = str(b.date)
-         k = k.split("-")
-         print("kkk=",k)
-         p = k[0] + "-" + k[1] + "-" + k[2]
-
-         today = str(datetime.today())
-         print(today)
-         q = today.split("-")
-         #print(q)
-         q1 = str(q[2]).split(" ")
-         d = q[0] + "-" + q[1] + "-" + q1[0]
-         print("date=",d)
-         print(k[0],q[0],k[1],q[1],k[2],"q",q1[0],"date")
-         if(k[0]==q[0] and k[1]==q[1] and k[2]==q1[0]):
-           k = str(b.time)
-           k = k.split(":")
-           p1 = k[0] + ":" + k[1] + ":" + k[2]
-
+def job(repeat=30):
+     us=User.objects.values('username')
+     print(us)
+     for po in us:
+         uid=po['username']
+         print("I'm working...")
+         c=Document.objects.filter(userid=uid)
+         x=User.objects.filter(username=uid)
+         mail=x[0].email
+         for b in c:
+           k = str(b.date)
+           k = k.split("-")
+           p = k[0] + "-" + k[1] + "-" + k[2]
            today = str(datetime.today())
-           q = today.split(" ")
-           h = str(q[1]).split(":")
-           h = h[0] + ":" + h[1]
-           print(k,h,"time")
-           if (k[0] == h[0] and k[1] == h[1] ):
+           q = today.split("-")
+           q1 = str(q[2]).split(" ")
+           d = q[0] + "-" + q[1] + "-" + q1[0]
+           if(k[0]==q[0] and k[1]==q[1] and k[2]==q1[0]):
+             k = str(b.time)
+             k = k.split(":")
+             p1 = k[0] + ":" + k[1] + ":" + k[2]
+
+             today = str(datetime.today().strftime("%H-%M"))
+             q = today.split("-")
+             #h = str(q[1]).split(":")
+
+             if (k[0] == q[0] and q[1] == k[1] ):
                msg=b.task
-               sub="todo upGrad"
+               sub="todo upGrad remainder"
                email = EmailMessage(sub, msg, to=[mail])
+               print("sending mail",msg,email)
                email.send()
-     time.sleep(30)
+               print("mail send")
+
+
+
+
+
+
+@background(schedule=1)
+def tenhour(repeat=36000):
+    us = User.objects.values('username')
+    print(us,"tenhour running")
+    for po in us:
+        uid = po['username']
+        print("I'm working...10 hour")
+        x=User.objects.filter(username=uid)
+        mail=x[0].email
+        msg_incom="incomplete tasks:"
+        msg_com="completed tasks:"
+        incomp= Document.objects.filter(userid=uid,status="incomplete")
+        comp = Document.objects.filter(userid=uid, status="complete")
+        if(len(incomp)==0):
+          msg_incom=msg_incom+"none"
+        else:
+         for i in incomp:
+             x=i.task
+             msg_incom=msg_incom+x+":"
+        if (len(comp) == 0):
+          msg_com = msg_com + "none "
+        else:
+         for i in comp:
+             x = i.task
+             msg_com = msg_com + x + ":"
+        msg=msg_incom+"\n"+msg_com
+        email = EmailMessage("10hr report", msg, to=[mail])
+        print("sending mail",mail)
+        email.send()
+        print("mail send")
+
+
+
