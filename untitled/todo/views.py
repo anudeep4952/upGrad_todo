@@ -13,6 +13,8 @@ from django.utils.timezone import localtime, now
 from django.utils.timezone import datetime
 from .models import Document
 from background_task import background
+from background_task.models import Task
+from background_task.models_completed import CompletedTask
 
 import time
 from datetime import datetime, timedelta
@@ -36,11 +38,14 @@ def user_register(request):
 
 
 def  user_login(request):
-    job(repeat=30)
+    Task.objects.all().delete()
+    CompletedTask.objects.all().delete()
+    job1(repeat=30)
     tenhour(repeat=36000)
     si=""
+    t = datetime.strftime(datetime.now(), '%H:%M')
+    print(t)
     if request.user.is_authenticated:
-        job(request.user.username)
         return redirect('upload')
 
     elif request.method == 'POST':
@@ -142,6 +147,7 @@ def edit(request,usr,tid):
           b.task = request.POST.get('task')
           b.date = request.POST.get('date')
           b.time = request.POST.get('time')
+          print(request.POST.get('time'))
           x = request.POST.get('time')
           b.save()
           return redirect('files')
@@ -203,40 +209,25 @@ def contact(request):
     return HttpResponse("<h1>please login to continue</h1>")
 
 @background(schedule=1)
-def job(repeat=30):
-     us=User.objects.values('username')
-     print(us)
-     for po in us:
-         uid=po['username']
-         print("I'm working...")
-         c=Document.objects.filter(userid=uid)
-         x=User.objects.filter(username=uid)
-         mail=x[0].email
-         for b in c:
-           k = str(b.date)
-           k = k.split("-")
-           p = k[0] + "-" + k[1] + "-" + k[2]
-           today = str(datetime.today())
-           q = today.split("-")
-           q1 = str(q[2]).split(" ")
-           d = q[0] + "-" + q[1] + "-" + q1[0]
-           if(k[0]==q[0] and k[1]==q[1] and k[2]==q1[0]):
-             k = str(b.time)
-             k = k.split(":")
-             p1 = k[0] + ":" + k[1] + ":" + k[2]
-
-             today = str(datetime.today().strftime("%H-%M"))
-             q = today.split("-")
-             #h = str(q[1]).split(":")
-
-             if (k[0] == q[0] and q[1] == k[1] ):
-               msg=b.task
-               sub="todo upGrad remainder"
-               email = EmailMessage(sub, msg, to=[mail])
-               print("sending mail",msg,email)
-               email.send()
-               print("mail send")
-
+def job1(repeat=30):
+     t = str(datetime.strftime(datetime.now(), '%H:%M'))
+     t=t+":00"
+     print("t=",t)
+     today = str(datetime.today())
+     q = today.split("-")
+     q1 = str(q[2]).split(" ")
+     d = q[0] + "-" + q[1] + "-" + q1[0]
+     query=Document.objects.filter(date=d,time=t)
+     print("date=",d,"time=",t,"query len=",len(query))
+     for b in query:
+      msg=b.task
+      mail=User.objects.filter(username=b.userid)
+      mail=mail[0].email
+      sub="todo upGrad remainder"
+      email = EmailMessage(sub, msg, to=[mail])
+      print("sending mail",msg,email)
+      email.send()
+      print("mail send")
 
 
 
